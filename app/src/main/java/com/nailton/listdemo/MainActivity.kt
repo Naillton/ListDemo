@@ -1,16 +1,26 @@
 package com.nailton.listdemo
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -18,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nailton.listdemo.ui.theme.ListDemoTheme
@@ -46,7 +57,8 @@ private fun MainScreen() {
     Box(
         contentAlignment = Alignment.Center
     ) {
-        ColumnList()
+        //ColumnList()
+        RowList()
     }
 }
 
@@ -74,13 +86,16 @@ private fun ColumnList() {
         Row {
             Button(
                 onClick = { changeFirstEnd(0) },
-                modifier = Modifier.weight(0.5f).padding(2.dp))
+                modifier = Modifier
+                    .weight(0.5f)
+                    .padding(2.dp))
                 {
                     Text("Top")
             }
 
             Button(onClick = { changeFirstEnd(scrollState.maxValue )},
-                modifier = Modifier.weight(0.5f)
+                modifier = Modifier
+                    .weight(0.5f)
                     .padding(2.dp)) {
                 Text("End")
             }
@@ -96,6 +111,44 @@ private fun ColumnList() {
                     modifier = Modifier.padding(5.dp))
             }
         }
+    }
+}
+
+@Composable
+private fun RowList() {
+    val scroolState = rememberScrollState()
+
+    val onTouch = {it: Int ->
+        Log.i("TAGY", "CONTEUDO: $it")
+    }
+
+    Row(
+        Modifier.horizontalScroll(scroolState)
+    ) {
+        repeat(20) {
+            Card(
+                Modifier
+                    .size(200.dp, 120.dp)
+                    .padding(20.dp)
+                    .clickable { onTouch(it) },
+                border = BorderStroke(2.dp, Color.Blue),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 10.dp
+                )
+            ) {
+                Column(
+                    Modifier.fillMaxSize().background(Color.Cyan),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "List item: $it",
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.padding(5.dp))
+                }
+            }
+        }
+
     }
 }
 
